@@ -1,0 +1,41 @@
+{% with total_items=cart|length %}
+                        {% if cart|length > 0 %}
+                        {% for item in cart %}
+                            {% with product=item.product %}
+                            <div class="cart-product-item">
+                                <div class="cart-product-left d-flex">
+                                    <a href="{% url 'cart:cart_remove' product.id %}"><img src="{% static 'shop/img/cart-remove.svg' %}" alt="" class="cart-product-remove"></a>
+                                    <div class="cart-product-img">
+                                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'shop/img/no_image.png' %}{% endif %}" alt="">
+                                    </div>
+                                    <div class="cart-product-name">{{ product.name }}</div>
+    
+                                    <div class="cart-product-toggle">
+                                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                        {{ item.update_quantity_form.quantity }}
+                                        {{ item.update_quantity_form.update }}
+                                        <div class="input_range" data-desc="Ед. изм.: метр">
+                                            <span class="min button">
+                                                <img src="{% static 'shop/img/minus.png' %}" alt="">
+                                            </span>
+                                            <input type="text" name="qty" maxlength="12" />
+                                            <span class="plus button">
+                                                <img src="{% static 'shop/img/plus.png' %}" alt="">
+                                            </span>
+                                        </div>
+                                        {% csrf_token %}
+                                        </form>
+                                        {{ item.quantity }}
+                                    </div>
+    
+                                    <div class="cart-product-price">
+                                        {{ item.total_price }} &#8372;
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                        {% endfor %}
+                        {% else %}
+                        <h5>Ваша корзина пуста :(</h5>
+                        {% endif %}
+                        {% endwith %}
